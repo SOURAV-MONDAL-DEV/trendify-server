@@ -106,6 +106,23 @@ async function run() {
 
 
 
+      app.put('/posts', async (req, res) => {
+         const postId = req.body.id;
+         const increase = req.body.increase;
+         const query = {_id: ObjectId(postId)};
+         const options = { upsert: true };
+         
+            console.log(increase);
+        
+            const result = await postsCollection.updateOne( query,{ $inc: {likeCount: increase }},);
+            res.send(result);
+         
+
+      })
+
+
+
+
 
 
       app.get('/isLiked', async (req, res) => {
@@ -115,7 +132,6 @@ async function run() {
          const query = { userEmail: email, postId: postId }
 
          const cursor = await likesCollection.findOne(query);
-         // const result = await cursor.toArray();
 
          res.send(cursor);
       })
