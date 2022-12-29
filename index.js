@@ -105,29 +105,48 @@ async function run() {
 
 
 
-   app.post('/likes', async (req, res) => {
-      const likes = req.body;
-      const result = await likesCollection.insertOne(likes);
-      res.send(result);
-  })
+
+
+  app.get('/isLiked', async (req, res) => {
+   const email = req.query.email;
+   const postId = req.query.postId;
+
+   const query = { userEmail:email , postId:postId }
+
+   const cursor = await likesCollection.find(query);
+   const result = await cursor.toArray();
+
+   res.send(result);
+})
 
 
 
-//   app.get('/likes', async (req, res) => {
-//    const email = req.query.email;
-//    const postId = req.query.postId;
-//    console.log(email,postId);
-
-//    const query = { email: email };
-//    const cursor = await usersCollection.find(query);
-//    const user = await cursor.toArray();
-
-//    res.send(user);
-// })
+app.post('/likes', async (req, res) => {
+   const likes = req.body;
+   const result = await likesCollection.insertOne(likes);
+   res.send(result);
+})
 
 
 
+app.delete('/likes', async (req, res) => {
+   const email = req.body.userEmail;
+   const postId = req.body.postId;
 
+   const query = { userEmail:email , postId:postId }
+
+   console.log(query);
+
+   const result = await likesCollection.deleteOne(query);
+
+   if (result.deletedCount === 1) {
+      console.log("Successfully deleted one document.");
+
+      res.send(true);
+
+    } 
+
+})
 
 
 
