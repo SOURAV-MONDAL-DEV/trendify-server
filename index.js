@@ -59,7 +59,7 @@ async function run() {
             $set: {
                name: user.name,
                email: user.email,
-               userPhoto:user.userPhoto,
+               userPhoto: user.userPhoto,
             }
          }
          if (user.email) {
@@ -75,87 +75,99 @@ async function run() {
          const posts = req.body;
          const result = await postsCollection.insertOne(posts);
          res.send(result);
-     })
+      })
 
 
 
 
 
-     app.get('/posts/popular', async (req, res) => {
-      const query = {};
-      const sort = { likeCount: -1 };
-      const limit = 3;
-      const cursor = await postsCollection.find(query).sort(sort).limit(limit);
-      const user = await cursor.toArray();
+      app.get('/posts/popular', async (req, res) => {
+         const query = {};
+         const sort = { likeCount: -1 };
+         const limit = 3;
+         const cursor = await postsCollection.find(query).sort(sort).limit(limit);
+         const user = await cursor.toArray();
 
-      res.send(user);
-   })
-
-
-
-     app.get('/posts/new', async (req, res) => {
-      const query = {};
-      const sort = { postingDate: -1 };
-      const limit = 3;
-      const cursor = await postsCollection.find(query).sort(sort).limit(limit);
-      const user = await cursor.toArray();
-
-      res.send(user);
-   })
+         res.send(user);
+      })
 
 
+
+      app.get('/posts/new', async (req, res) => {
+         const query = {};
+         const sort = { postingDate: -1 };
+         const limit = 3;
+         const cursor = await postsCollection.find(query).sort(sort).limit(limit);
+         const user = await cursor.toArray();
+
+         res.send(user);
+      })
 
 
 
 
-  app.get('/isLiked', async (req, res) => {
-   const email = req.query.email;
-   const postId = req.query.postId;
-
-   const query = { userEmail:email , postId:postId }
-
-   const cursor = await likesCollection.find(query);
-   const result = await cursor.toArray();
-
-   res.send(result);
-})
 
 
+      app.get('/isLiked', async (req, res) => {
+         const email = req.query.email;
+         const postId = req.query.postId;
 
-app.post('/likes', async (req, res) => {
-   const likes = req.body;
-   const result = await likesCollection.insertOne(likes);
-   res.send(result);
-})
+         const query = { userEmail: email, postId: postId }
+
+         const cursor = await likesCollection.findOne(query);
+         // const result = await cursor.toArray();
+
+         res.send(cursor);
+      })
 
 
 
-app.delete('/likes', async (req, res) => {
-   const email = req.body.userEmail;
-   const postId = req.body.postId;
-
-   const query = { userEmail:email , postId:postId }
-
-   console.log(query);
-
-   const result = await likesCollection.deleteOne(query);
-
-   if (result.deletedCount === 1) {
-      console.log("Successfully deleted one document.");
-
-      res.send(true);
-
-    } 
-
-})
+      app.post('/likes', async (req, res) => {
+         const likes = req.body;
+         const result = await likesCollection.insertOne(likes);
+         res.send(result);
+      })
 
 
 
-app.post('/comments', async (req, res) => {
-   const comments = req.body;
-   const result = await commentsCollection.insertOne(comments);
-   res.send(result);
-})
+      app.delete('/likes', async (req, res) => {
+         const email = req.body.userEmail;
+         const postId = req.body.postId;
+
+         const query = { userEmail: email, postId: postId }
+
+         console.log(query);
+
+         const result = await likesCollection.deleteOne(query);
+
+         if (result.deletedCount === 1) {
+            console.log("Successfully deleted one document.");
+
+            res.send(true);
+
+         }
+
+      })
+
+
+
+      app.post('/comments', async (req, res) => {
+         const comments = req.body;
+         const result = await commentsCollection.insertOne(comments);
+         res.send(result);
+      })
+
+
+      app.get('/comments', async (req, res) => {
+         const postId = req.query.postId;
+
+         const query = {postId: postId }
+
+         const cursor = await commentsCollection.find(query);
+         const result = await cursor.toArray();
+
+         res.send(result);
+      })
 
 
 
