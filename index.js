@@ -23,6 +23,7 @@ async function run() {
 
       const usersCollection = client.db('trendify').collection('users');
       const postsCollection = client.db('trendify').collection('posts');
+      const likesCollection = client.db('trendify').collection('likes');
 
 
 
@@ -57,6 +58,7 @@ async function run() {
             $set: {
                name: user.name,
                email: user.email,
+               userPhoto:user.userPhoto,
             }
          }
          if (user.email) {
@@ -80,13 +82,48 @@ async function run() {
 
      app.get('/posts/popular', async (req, res) => {
       const query = {};
-      const sort = { totalReact: -1 };
+      const sort = { likeCount: -1 };
       const limit = 3;
       const cursor = await postsCollection.find(query).sort(sort).limit(limit);
       const user = await cursor.toArray();
 
       res.send(user);
    })
+
+
+
+     app.get('/posts/new', async (req, res) => {
+      const query = {};
+      const sort = { postingDate: -1 };
+      const limit = 3;
+      const cursor = await postsCollection.find(query).sort(sort).limit(limit);
+      const user = await cursor.toArray();
+
+      res.send(user);
+   })
+
+
+
+
+   app.post('/likes', async (req, res) => {
+      const likes = req.body;
+      const result = await likesCollection.insertOne(likes);
+      res.send(result);
+  })
+
+
+
+//   app.get('/likes', async (req, res) => {
+//    const email = req.query.email;
+//    const postId = req.query.postId;
+//    console.log(email,postId);
+
+//    const query = { email: email };
+//    const cursor = await usersCollection.find(query);
+//    const user = await cursor.toArray();
+
+//    res.send(user);
+// })
 
 
 
