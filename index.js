@@ -24,6 +24,7 @@ async function run() {
       const usersCollection = client.db('trendify').collection('users');
       const postsCollection = client.db('trendify').collection('posts');
       const likesCollection = client.db('trendify').collection('likes');
+      const commentsCollection = client.db('trendify').collection('comments');
 
 
 
@@ -146,6 +147,14 @@ app.delete('/likes', async (req, res) => {
 
     } 
 
+})
+
+
+
+app.post('/comments', async (req, res) => {
+   const comments = req.body;
+   const result = await commentsCollection.insertOne(comments);
+   res.send(result);
 })
 
 
