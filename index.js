@@ -96,8 +96,8 @@ async function run() {
       app.get('/posts/new', async (req, res) => {
          const query = {};
          const sort = { postingDate: -1 };
-         const limit = 3;
-         const cursor = await postsCollection.find(query).sort(sort).limit(limit);
+         // const limit = 3; limit(limit)
+         const cursor = await postsCollection.find(query).sort(sort);
          const user = await cursor.toArray();
 
          res.send(user);
