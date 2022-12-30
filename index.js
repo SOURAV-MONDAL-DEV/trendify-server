@@ -60,6 +60,9 @@ async function run() {
                name: user.name,
                email: user.email,
                userPhoto: user.userPhoto,
+               address:user?.address ,
+               work: user?.work,
+               college: user?.college,
             }
          }
          if (user.email) {
